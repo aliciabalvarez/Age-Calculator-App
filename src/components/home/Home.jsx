@@ -8,11 +8,46 @@ const Home = () => {
     const [month, setMonth] = useState(0);
     const [year, setYear] = useState(0);
 
-    let newDate = new Date(`${month}/${day}/${year}`);
-    let differentDay = Math.trunc((new Date() - newDate) / 1000 / 60 / 60 / 24)
-    console.log('Días de diferencia: ' + Math.round(differentDay))
-    console.log('Mes de diferencia: ' + Math.round((differentDay / 365 * 12)))
-    console.log('Años de diferencia: ' + Math.round(differentDay / 365))
+    // const getTotalDays = (birthday)=>{
+    // const milisecondsToNow = new Date(birthday).getTime()
+    // const now = new Date().getTime()
+
+    // return (now - milisecondsToNow) / 1000 / 60 / 60 / 24
+    // }
+
+    const convertDays = (days) => {
+        console.log(days)
+        const years = Math.floor(days / 365);
+        days = days % 365;
+        let months = Math.floor(days / 30);
+        days = days % 30;
+
+        const dateTemp = new Date();
+        dateTemp.setDate(dateTemp.getDate() + days);
+        const lastDayOfMonth = new Date(dateTemp.getFullYear(), dateTemp.getMonth() + 1, 0).getDate();
+        if (days > lastDayOfMonth) {
+            days -= lastDayOfMonth;
+            months++;
+        }
+
+        return { years, months, days };
+    }
+
+    const diferenceBetweenDates = (now, birthday) => {
+        const milisecondsPerDay = 86400000; // Número de milisegundos en un día
+        const milisecondsBetweenDays = now - birthday // Calcula la diferencia de tiempo en milisegundos
+        const diferenceInDays = Math.floor(milisecondsBetweenDays / milisecondsPerDay); // Convierte la diferencia en días
+
+        return diferenceInDays;
+    }
+
+    const birthday = new Date(`${month}/${day}/${year}`);
+    const now = new Date();
+
+
+    const totalDays = diferenceBetweenDates(now, birthday);
+    const totalTime = convertDays(totalDays);
+    console.log(totalTime)
 
 
 
@@ -23,19 +58,19 @@ const Home = () => {
                     <StyledFlex>
                         <div>
                             <StyledText>DAY</StyledText>
-                            <StyledInput onChange={(ev) => setDay(ev.target.value)} type="number" min="1" max="31" />
+                            <StyledInput type="number" min="1" max="31" />
                         </div>
                         <div>
                             <StyledText>MONTH</StyledText>
-                            <StyledInput onChange={(ev) => setMonth(ev.target.value)} type="number" min="1" max="12" />
+                            <StyledInput type="number" min="1" max="12" />
                         </div>
                         <div>
                             <StyledText>YEAR</StyledText>
-                            <StyledInput onChange={(ev) => setYear(ev.target.value)} type="number" />
+                            <StyledInput type="number" />
                         </div>
                     </StyledFlex>
                     <hr />
-                    <button>Onclick</button>
+                    <button onClick={(ev) => setDate(ev.target.value)}  >Onclick</button>
                     <StyledH2>
                         <StyledPurple>{ }</StyledPurple> years
                     </StyledH2>
